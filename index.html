@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>İlişkimiz Wrapped</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Montserrat',sans-serif;
+  background:#000;
+  color:#fff;
+  overflow:hidden;
+}
+
+/* Netflix N Logo Stili */
+.netflix-logo {
+  position: absolute;
+  top: 30px;
+  left: 24px;
+  font-size: 42px;
+  font-weight: 900;
+  color: #E50914; 
+  z-index: 100;
+  font-family: 'Arial Black', sans-serif;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.match-text {
+  color: #46d369; 
+  font-weight: 700;
+}
+
+.story-nav{
+  position:fixed;
+  top:12px;
+  left:12px;
+  right:12px;
+  display:flex;
+  gap:6px;
+  z-index:50;
+}
+.story-nav span{
+  flex:1;
+  height:4px;
+  background:rgba(255,255,255,.25);
+  border-radius:4px;
+  overflow:hidden;
+}
+.story-nav span i{
+  display:block;
+  height:100%;
+  width:0%;
+  background:#fff;
+}
+
+.card{
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  display:none;
+}
+.card.active{display:block}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,.15),rgba(0,0,0,.85));
+}
+
+/* 2. Kart Özel Katmanı */
+.card-2 .overlay {
+  background: linear-gradient(135deg, rgba(123, 97, 255, 0.6), rgba(255, 78, 205, 0.6), rgba(0, 0, 0, 0.8)) !important;
+}
+
+.content{
+  position:absolute;
+  bottom:64px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:10; /* Content z-index artırıldı */
+  width:100%;
+  max-width:520px;
+  padding:0 24px;
+  text-align:center;
+  opacity:0;
+}
+
+/* 2. Kart Yazı Hizalama ve Vurgu */
+.card-2 .content {
+  bottom: 50% !important;
+  transform: translate(-50%, 50%) !important;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+}
+
+/* Tasarım Bileşenleri */
+.glass-box {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 15px;
+  margin: 10px 0;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.split-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.split-top { height: 50%; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 20px; }
+.split-bottom { height: 50%; padding: 20px; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); border-top: 1px solid rgba(255,255,255,0.2); }
+
+.award-item {
+  background: linear-gradient(90deg, #f1c40f, #d4af37);
+  color: #000;
+  padding: 10px;
+  border-radius: 50px;
+  font-weight: 800;
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+/* Animasyonlar */
+.card-1 .content{animation:fadeUp .8s ease forwards}
+.card-2 .content{animation:slideRightCenter .8s ease forwards}
+.card-3 .content{animation:zoomIn .8s ease forwards}
+.card-4 .content{animation:fadeUp .8s ease forwards}
+.card-5 .content{animation:fadeDown .8s ease forwards}
+.card-6 .content { animation: zoomIn 1s ease forwards; }
+.card-7 .content { animation: slideLeft 1s ease forwards; }
+.card-8 .content { animation: fadeUp 1s ease forwards; }
+.card-9 .content { animation: zoomIn 0.8s ease forwards; }
+.card-10 .content { animation: slideRight 1s ease forwards; }
+.card-11 .content { animation: fadeDown 1s ease forwards; }
+.card-12 .content { animation: zoomIn 1.2s ease forwards; }
+.card-13 .content { animation: fadeUp 1s ease forwards; }
+.card-14 .content { animation: slideLeft 1.2s ease forwards; }
+.card-15 .content { animation: zoomIn 1.5s ease forwards; }
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translate(-50%,40px)}
+  to{opacity:1;transform:translate(-50%,0)}
+}
+@keyframes slideRightCenter{
+  from{opacity:0;transform:translate(calc(-50% + 60px), 50%)}
+  to{opacity:1;transform:translate(-50%, 50%)}
+}
+@keyframes slideRight{
+  from{opacity:0;transform:translate(calc(-50% + 60px), 0)}
+  to{opacity:1;transform:translate(-50%, 0)}
+}
+@keyframes slideLeft{
+  from{opacity:0;transform:translate(calc(-50% - 60px),0)}
+  to{opacity:1;transform:translate(-50%,0)}
+}
+@keyframes zoomIn{
+  from{opacity:0;transform:translate(-50%,0) scale(.85)}
+  to{opacity:1;transform:translate(-50%,0) scale(1)}
+}
+@keyframes fadeDown{
+  from{opacity:0;transform:translate(-50%,-40px)}
+  to{opacity:1;transform:translate(-50%,0)}
+}
+
+h1{font-size:40px;font-weight:800;margin:6px 0}
+h2{font-size:32px;font-weight:700;margin:6px 0}
+p{font-size:18px;opacity:.9;margin:4px 0}
+
+.stat-box {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 20px;
+  margin: 15px 0;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.big-number {
+  display: block;
+  font-size: 64px;
+  font-weight: 800;
+  color: #1DB954;
+  margin: 10px 0;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-weight: 600;
+}
+
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+  margin-top:20px;
+}
+.tag{
+  background:#fff;
+  color:#000;
+  padding:12px 22px;
+  border-radius:999px;
+  font-weight:700;
+  box-shadow:inset 0 -4px 0 #1DB954;
+}
+
+.progress{
+  height:8px;
+  border-radius:8px;
+  background:linear-gradient(90deg,#ff4ecd,#7b61ff);
+  margin:12px 0;
+}
+
+.click-left,.click-right{
+  position:fixed;
+  top:0;
+  width:50%;
+  height:100vh;
+  z-index:40;
+  pointer-events:none;
+}
+.click-left{left:0}
+.click-right{right:0}
+
+.audio-btn{
+  position:fixed;
+  top:16px;
+  right:16px;
+  z-index:60;
+  background:rgba(0,0,0,.6);
+  border-radius:50%;
+  padding:10px 12px;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.play-btn {
+  margin-top:20px;
+  padding:16px 44px;
+  font-size:18px;
+  font-weight:700;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  background:#1DB954;
+  color:#000;
+  animation:pulse 1.6s infinite;
+  position: relative;
+  z-index: 100;
+}
+
+.restart-btn {
+  margin-top: 30px;
+  padding: 14px 40px;
+  font-size: 16px;
+  font-weight: 800;
+  border-radius: 999px;
+  border: 3px solid #fff;
+  cursor: pointer;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  position: relative;
+  z-index: 999; /* En üstte olması için */
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.restart-btn:active {
+  transform: scale(0.95);
+  background: #fff;
+  color: #000;
+}
+
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(29,185,84,.7)}
+  70%{box-shadow:0 0 0 25px rgba(29,185,84,0)}
+  100%{box-shadow:0 0 0 0 rgba(29,185,84,0)}
+}
+</style>
+</head>
+<body>
+
+<div class="story-nav">
+  <span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span>
+  <span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span>
+  <span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span><span><i></i></span>
+</div>
+
+<div class="audio-btn" id="audioBtn">🔊</div>
+
+<audio id="bgm" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card card-1 active" style="background-image:url('images/bg1.jpg')">
+  <div class="netflix-logo">N</div>
+  <div class="overlay"></div>
+  <div class="content">
+    <p>İLİŞKİ ÖZETİ · 2025</p>
+    <h1>ZIT KUTUPLAR</h1>
+    <p><span class="match-text">%88 Eşleşme</span> · 3 Sezon · HD</p>
+    <p>Biri plan yapmadan adım atmaz, diğeri sabah uyanıp şehir değiştirebilir.</p>
+    <button class="play-btn" id="startBtn">▶ Oynat</button>
+  </div>
+</div>
+
+<div class="card card-2" style="background-image:url('images/bg2.jpg')">
+  <div class="overlay"></div>
+  <div class="content">
+    <p>SİZ TAM OLARAK BUSUNUZ</p>
+    <h1>KEDİ & KÖPEK</h1>
+    <div class="progress" style="background: #1DB954;"></div>
+    <p>Sürekli didişen ama birbirini görmeden duramayan ikili.</p>
+  </div>
+</div>
+
+<div class="card card-3" style="background-image:url('images/bg3.jpg')">
+  <div class="overlay" style="background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(123, 97, 255, 0.2))"></div>
+  <div class="content">
+    <p style="letter-spacing: 5px; color: #ff4ecd; font-weight: 800;">İLİŞKİ AURANIZ</p>
+    <h1 style="background: linear-gradient(to right, #ff4ecd, #7b61ff, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 52px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));">KAOTİK HUZUR</h1>
+    <p style="margin-top: 15px; font-style: italic;">Fırtınadan sonraki sessizlik gibisiniz.</p>
+  </div>
+</div>
+
+<div class="card card-4" style="background-image:url('images/bg4.jpg')">
+  <div class="overlay"></div>
+  <div class="split-container">
+    <div class="split-top">
+      <div style="text-align:center; padding: 20px;">
+        <p>BİRLİKTE GEÇEN</p>
+        <h1>2 YIL 7 AY</h1>
+        <div class="progress" style="width: 60%; margin: 10px auto;"></div>
+      </div>
+    </div>
+    <div class="split-bottom">
+      <h2 style="font-size: 24px; color: #7b61ff;">✨ Burç Uyumu ✨</h2>
+      <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin: 15px 0;">
+        <div style="text-align:center;"><span style="font-size:40px;">♈</span><p style="font-size:12px;">Koç</p></div>
+        <div style="font-size:30px; color:#ff4ecd;">❤</div>
+        <div style="text-align:center;"><span style="font-size:40px;">♌</span><p style="font-size:12px;">Aslan</p></div>
+      </div>
+      <p style="font-size:14px; line-height:1.4;">"Ateş grubu enerjinizle birbirinizi her an yeniden keşfediyorsunuz."</p>
+    </div>
+  </div>
+</div>
+
+<div class="card card-5" style="background-image:url('images/bg5.jpg')"><div class="overlay"></div><div class="content"><h2>2025'TE EN ÇOK</h2><h1>KULLANDIĞINIZ VİBELAR</h1><div class="tags"><div class="tag">#FOODIE</div><div class="tag">#DRAMA</div><div class="tag">#TRAVEL</div><div class="tag">#CHILL</div><div class="tag">#GOSSIP</div></div></div></div>
+
+<div class="card card-6" style="background-image:url('images/bg6.jpg')">
+  <div class="overlay"></div>
+  <div class="content">
+    <p style="font-weight: 800; color: #1DB954; letter-spacing: 2px;">2025 İSTATİSTİKLERİ</p>
+    <div class="glass-box">
+      <p style="font-size: 14px;">📍 En Çok Gidilen Yer</p>
+      <h2 style="font-size: 24px; margin: 5px 0;">Ortaköy</h2>
+    </div>
+    <div class="glass-box">
+      <p style="font-size: 14px;">🗣 Favori Hitaplar</p>
+      <p style="font-weight: 700; color: #ff4ecd;">"Aşkım, Bitanem, Kuzi"</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <div class="glass-box" style="flex:1; font-size: 13px;">
+        <strong>Murat'ın Sevdikleri</strong>
+        <p>☕ Kahve</p><p>🎮 Oyun</p><p>🚗 Gezmek</p>
+      </div>
+      <div class="glass-box" style="flex:1; font-size: 13px;">
+        <strong>Buse'nin Sevdikleri</strong>
+        <p>🍕 Pizza</p><p>🐶 Köpekler</p><p>📸 Fotoğraf</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card card-7" style="background-image:url('images/bg7.jpg')"><div class="overlay"></div><div class="content"><h2>NE YİYECEĞİMİZE</h2><h1>KARAR VEREMEME</h1><div class="stat-box"><p>Ortalama Karar Süresi</p><span class="big-number" style="color:#ff4ecd">45 DK</span><div class="progress"></div><p>Ama sonuç hep aynı: "Sen ne istersen o."</p></div></div></div>
+
+<div class="card card-8" style="background-image:url('images/bg8.jpg')"><div class="overlay"></div><div class="content"><p>EN ÇOK KULLANILAN</p><h1>GECE MESAJLARI</h1><div class="stat-box"><div class="list-item"><span>"Uyudun mu?"</span><span>420 kez</span></div><div class="list-item"><span>"Seni seviyorum"</span><span>∞ kez</span></div><div class="list-item"><span>"Acıktım..."</span><span>185 kez</span></div></div></div></div>
+
+<div class="card card-9" style="background-image:url('images/bg9.jpg')"><div class="overlay"></div><div class="content"><p>BU YILIN SOUNDTRACK'İ</p><div style="margin:20px auto; width:120px; height:120px; border-radius:50%; background:linear-gradient(45deg, #1DB954, #fff); display:flex; align-items:center; justify-content:center; color:#000; font-size:40px;">🎵</div><h1>BİZİM ŞARKI</h1><p>Tekrar tekrar çalındı.</p></div></div>
+
+<div class="card card-10" style="background-image:url('images/bg10.jpg')">
+  <div class="overlay"></div>
+  <div class="content">
+    <p style="font-weight:800; color:#E50914;">WATCH LIST</p>
+    <h1>ORTAK FİLM & DİZİ</h1>
+    <div class="glass-box" style="text-align: left; border-left: 4px solid #E50914;">
+      <p style="font-size: 14px; opacity: 0.7;">🎬 Ortak Filmler</p>
+      <p style="font-weight: 700;">Inception, Interstellar, Soul</p>
+    </div>
+    <div class="glass-box" style="text-align: left; border-left: 4px solid #E50914;">
+      <p style="font-size: 14px; opacity: 0.7;">📺 Ortak Diziler</p>
+      <p style="font-weight: 700;">HIMYM, Dark, Succession</p>
+    </div>
+  </div>
+</div>
+
+<div class="card card-11" style="background-image:url('images/bg11.jpg')"><div class="overlay"></div><div class="content"><p>GEZİLEN YERLER</p><h1>7 ŞEHİR & 120 MEKAN</h1><div class="tags"><div class="tag">📍 İstanbul</div><div class="tag">📍 İzmir</div><div class="tag">📍 Mutfak</div></div><p>Ve sayısız anı toplandı.</p></div></div>
+
+<div class="card card-12" style="background-image:url('images/bg12.jpg')">
+  <div class="overlay"></div>
+  <div class="content">
+    <p>ROADMAP</p>
+    <h1>2026 HEDEFLERİ</h1>
+    <div class="glass-box">
+      <div class="list-item"><span>🚀 Birlikte Yurt Dışı</span><span>🎯</span></div>
+      <div class="list-item"><span>🏡 Yeni Bir Ev</span><span>🎯</span></div>
+      <div class="list-item"><span>📸 1000 Yeni Anı</span><span>🎯</span></div>
+    </div>
+    <p style="font-size: 14px; margin-top: 10px;">Birlikte her şey mümkün.</p>
+  </div>
+</div>
+
+<div class="card card-13" style="background-image:url('images/bg13.jpg')">
+  <div class="overlay"></div>
+  <div class="content">
+    <p style="font-weight:800; color:#f1c40f;">THE WINNERS ARE...</p>
+    <h1>YILIN ÖDÜLLERİ</h1>
+    <div class="award-item">🏆 En Çok Gezen Çift</div>
+    <div class="award-item">🏆 En Çok Birlikte Sabahlayan Çift</div>
+    <div class="award-item">🏆 En İyi Gurme Ekibi</div>
+  </div>
+</div>
+
+<div class="card card-14" style="background-image:url('images/bg14.jpg')"><div class="overlay"></div><div class="content"><p>EN ÇOK İHLAL EDİLEN KURAL</p><h1>"BUGÜN ERKEN UYUYALIM"</h1><div class="stat-box"><p>Başarı Oranı</p><span class="big-number" style="color:red">%2</span></div></div></div>
+
+<div class="card card-15" style="background-image:url('images/bg15.jpg')">
+  <div class="overlay"></div>
+  <div class="content" style="bottom: 50% !important; transform: translate(-50%, 50%) !important;">
+    <div style="font-size: 80px; margin-bottom: 20px;">❤️</div>
+    <h1 style="font-size: 48px; line-height: 1.1;">İYİ Kİ VARSIN</h1>
+    <p style="font-size: 20px; opacity: 0.7; letter-spacing: 2px;">2025'in en güzel anı sendin.</p>
+    <div class="progress" style="width: 100px; margin: 20px auto; background: #fff;"></div>
+    <p style="font-size: 14px;">Seni Seviyorum</p>
+    <button class="restart-btn" id="restartBtn">BAŞA DÖN</button>
+  </div>
+</div>
+
+<div class="click-left" id="clickL"></div>
+<div class="click-right" id="clickR"></div>
+
+<script>
+const cards=document.querySelectorAll('.card');
+const bars=document.querySelectorAll('.story-nav span i');
+const clickR=document.getElementById('clickR');
+const clickL=document.getElementById('clickL');
+const DURATION=8000;
+let index=0,raf=null,started=false;
+
+function resetBars(){
+  bars.forEach(b => b.style.width = '0%');
+}
+
+function show(i){
+  cancelAnimationFrame(raf);
+  cards.forEach((c,idx)=>{
+    c.classList.toggle('active',idx===i);
+    const content = c.querySelector('.content');
+    if(content) content.style.opacity=1;
+  });
+  
+  index=i;
+
+  // Çubukları güncelle
+  bars.forEach((bar, idx) => {
+    if(idx < i) bar.style.width = '100%';
+    else if(idx > i) bar.style.width = '0%';
+  });
+
+  // 15. KARTA ÖZEL: Tıklama katmanını kapat ki butona basılabilsin
+  if(i === 14) {
+    clickR.style.pointerEvents = 'none';
+  } else if(started) {
+    clickR.style.pointerEvents = 'auto';
+  }
+
+  if(started && index>0 && index < cards.length - 1) startProgress();
+}
+
+function startProgress(){
+  const bar=bars[index],start=performance.now();
+  function animate(now){
+    const e=now-start;
+    bar.style.width=Math.min(e/DURATION*100,100)+'%';
+    if(e<DURATION) raf=requestAnimationFrame(animate);
+    else if(index<cards.length-1) show(index+1);
+  }
+  raf=requestAnimationFrame(animate);
+}
+
+document.getElementById('startBtn').onclick=()=>{
+  started=true;
+  resetBars();
+  show(1);
+  clickL.style.pointerEvents='auto';
+  clickR.style.pointerEvents='auto';
+};
+
+// BAŞA DÖN BUTONU KESİN ÇÖZÜM
+document.getElementById('restartBtn').onclick = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  started = false;
+  resetBars();
+  show(0);
+};
+
+clickR.onclick=()=>{if(index<cards.length-1){resetBars();show(index+1)}}
+clickL.onclick=()=>{if(index>0){resetBars();show(index-1)}}
+
+const audio=document.getElementById('bgm'),audioBtn=document.getElementById('audioBtn');
+audioBtn.onclick=()=>{audio.paused?audio.play():audio.pause();audioBtn.textContent=audio.paused?'🔇':'🔊'}
+document.body.addEventListener('click',()=>audio.play().catch(()=>{}),{once:true});
+</script>
+
+</body>
+</html>
